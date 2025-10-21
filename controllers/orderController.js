@@ -21,6 +21,21 @@ exports.getUserOrders = async (req, res) => {
     res.status(500).json({ message: 'Error fetching user orders', error });
   }
 };
+
+// Get a specific order by ID
+exports.getOrderById = async (req, res) => {
+  try {
+    const orderId = req.params.orderId;
+    const order = await orderModel.findById(orderId);
+    if (!order) {
+      return res.status(404).json({ message: 'Order not found' });
+    }
+    res.status(200).json(order);
+    } catch (error) {
+    res.status(500).json({ message: 'Error fetching order', error });
+    }
+};
+
 // Get all orders
 exports.getAllOrders = async (req, res) => {
   try {
