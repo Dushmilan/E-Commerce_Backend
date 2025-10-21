@@ -42,7 +42,8 @@ exports.getCartByUserId = async (req, res) => {
 // Remove product from cart
 exports.removeFromCart = async (req, res) => {
     try {
-        const { userId, productId } = req.body;
+        const { userId } = req.body;  // Keep userId in body, productId in body
+        const { productId } = req.body;
         const cart = await cartModel
             .findOne({ userId });
         if (!cart) {
@@ -60,7 +61,7 @@ exports.removeFromCart = async (req, res) => {
 // Clear cart
 exports.clearCart = async (req, res) => {
     try {
-        const { userId } = req.params;
+        const { userId } = req.body;
         const cart = await cartModel.findOne({ userId });
         if (!cart) {
             return res.status(404).json({ message: 'Cart not found' });

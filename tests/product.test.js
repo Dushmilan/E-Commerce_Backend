@@ -18,7 +18,7 @@ describe('Product API', () => {
     describe('GET /products', () => {
         it('should get all products', async () => {
             const response = await request(app)
-                .get('/products')
+                .get('/api/products')
                 .expect(200);
 
             expect(Array.isArray(response.body)).toBe(true);
@@ -29,7 +29,7 @@ describe('Product API', () => {
         it('should get a product by ID', async () => {
             // First create a product to retrieve
             const createResponse = await request(app)
-                .post('/products')
+                .post('/api/products')
                 .send({
                     ...mockProduct
                 })
@@ -38,7 +38,7 @@ describe('Product API', () => {
             createdProductId = createResponse.body._id;
 
             const response = await request(app)
-                .get(`/products/${createdProductId}`)
+                .get(`/api/products/${createdProductId}`)
                 .expect(200);
 
             expect(response.body._id).toBe(createdProductId);
@@ -47,7 +47,7 @@ describe('Product API', () => {
 
         it('should return 404 for non-existent product', async () => {
             const response = await request(app)
-                .get('/products/507f1f77bcf86cd799439011')
+                .get('/api/products/507f1f77bcf86cd799439011')
                 .expect(404);
 
             expect(response.body.error).toBe('Product not found');
@@ -66,7 +66,7 @@ describe('Product API', () => {
             };
             
             const response = await request(app)
-                .post('/products')
+                .post('/api/products')
                 .send(uniqueProduct)
                 .expect(201);
 
@@ -81,7 +81,7 @@ describe('Product API', () => {
 
         it('should return error if required fields are missing', async () => {
             const response = await request(app)
-                .post('/products')
+                .post('/api/products')
                 .send({
                     name: 'Product without required fields'
                     // Missing other required fields
@@ -96,7 +96,7 @@ describe('Product API', () => {
         it('should update a product', async () => {
             // First create a product
             const createResponse = await request(app)
-                .post('/products')
+                .post('/api/products')
                 .send({
                     id: 'upd_' + Date.now(),
                     name: 'Product to Update',
@@ -118,7 +118,7 @@ describe('Product API', () => {
             };
 
             const response = await request(app)
-                .put(`/products/${productId}`)
+                .put(`/api/products/${productId}`)
                 .send(updatedData)
                 .expect(200);
 
@@ -134,7 +134,7 @@ describe('Product API', () => {
             };
 
             const response = await request(app)
-                .put('/products/507f1f77bcf86cd799439011')
+                .put('/api/products/507f1f77bcf86cd799439011')
                 .send(updatedData)
                 .expect(404);
 
@@ -146,7 +146,7 @@ describe('Product API', () => {
         it('should delete a product', async () => {
             // First create a product to delete
             const createResponse = await request(app)
-                .post('/products')
+                .post('/api/products')
                 .send({
                     id: 'del_' + Date.now(),
                     name: 'Product to Delete',
@@ -160,7 +160,7 @@ describe('Product API', () => {
             const productId = createResponse.body._id;
 
             const response = await request(app)
-                .delete(`/products/${productId}`)
+                .delete(`/api/products/${productId}`)
                 .expect(200);
 
             expect(response.body.message).toBe('Product deleted successfully');
@@ -168,7 +168,7 @@ describe('Product API', () => {
 
         it('should return 404 for non-existent product', async () => {
             const response = await request(app)
-                .delete('/products/507f1f77bcf86cd799439011')
+                .delete('/api/products/507f1f77bcf86cd799439011')
                 .expect(404);
 
             expect(response.body.error).toBe('Product not found');
