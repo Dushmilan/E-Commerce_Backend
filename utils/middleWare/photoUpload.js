@@ -1,7 +1,7 @@
-const mutler = require('multer');
+const multer = require('multer');
 const path = require('path');
 // Set up storage engine
-const storage = mutler.diskStorage({
+const storage = multer.diskStorage({
   destination: function (req, file, cb) {
     cb(null, 'uploads/'); // Directory to save uploaded photos
   },
@@ -21,7 +21,7 @@ const fileFilter = (req, file, cb) => {
     }
 };
 // Initialize multer with storage engine and file filter
-const upload = mutler({
+const upload = multer({
   storage: storage,
     fileFilter: fileFilter,
     limits: { fileSize: 5 * 1024 * 1024 } // 5 MB file size limit

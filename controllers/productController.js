@@ -1,58 +1,70 @@
 const productModel = require('../models/productModel');
 
-function getAllProducts(req, res) {
-  productModel.find({}, (err, products) => {
-    if (err) {
-      return res.status(500).json({ error: 'Failed to fetch products' });
-    }
+async function getAllProducts(req, res) {
+  try {
+    const products = await productModel.find({});
     res.json(products);
-  });
+  } catch (err) {
+    return res.status(500).json({ error: 'Failed to fetch products' });
+  }
 }
-function getProductById(req, res) {
+async function getProductById(req, res) {
   const { id } = req.params;
-  productModel.findById(id, (err, product) => {
-    if (err) {
-      return res.status(500).json({ error: 'Failed to fetch product' });
-    }
+  try {
+    const product = await productModel.findById(id);
     if (!product) {
       return res.status(404).json({ error: 'Product not found' });
     }
     res.json(product);
-  });   
+  } catch (err) {
+    return res.status(500).json({ error: 'Failed to fetch product' });
+  }
 }
-function createProduct(req, res) {
-  const productData = req.body;
-  const newProduct = new productModel(productData);
-  newProduct.save((err, savedProduct) => {
-    if (err) {
-      return res.status(500).json({ error: 'Failed to create product' });
+async function createProduct(req, res) {
+  try {
+    const productData = req.body;
+    
+    // Handle photo upload path
+    if (req.file) {
+      productData.photo = req.file.path;  // or req.file.filename depending on your needs
     }
+    
+    const newProduct = new productModel(productData);
+    const savedProduct = await newProduct.save();
     res.status(201).json(savedProduct);
-  });  
+  } catch (err) {
+    return res.status(500).json({ error: 'Failed to create product' });
+  }
 }
-function updateProduct(req, res) {
+async function updateProduct(req, res) {
   const { id } = req.params;
-  const productData = req.body;
-  productModel.findByIdAndUpdate(id, productData, { new: true }, (err, updatedProduct) => {
-    if (err) {
-      return res.status(500).json({ error: 'Failed to update product' });
+  try {
+    const productData = req.body;
+    
+    // Handle photo upload path
+    if (req.file) {
+      productData.photo = req.file.path;  // or req.file.filename depending on your needs
     }
+    
+    const updatedProduct = await productModel.findByIdAndUpdate(id, productData, { new: true });
     if (!updatedProduct) {
       return res.status(404).json({ error: 'Product not found' });
     }
     res.json(updatedProduct);
-  });    
+  } catch (err) {
+    return res.status(500).json({ error: 'Failed to update product' });
+  }
 }
-function deleteProduct(req, res) {
+async function deleteProduct(req, res) {
   const { id } = req.params;
-  productModel.findByIdAndDelete(id, (err, deletedProduct) => {
-    if (err) {
-      return res.status(500).json({ error: 'Failed to delete product' });
-    }
+  try {
+    const deletedProduct = await productModel.findByIdAndDelete(id);
     if (!deletedProduct) {
       return res.status(404).json({ error: 'Product not found' });
     }
     res.json({ message: 'Product deleted successfully' });
-  }); 
+  } catch (err) {
+    return res.status(500).json({ error: 'Failed to delete product' });
+  }
 }
 module.exports = {getAllProducts,getProductById,createProduct,updateProduct,deleteProduct};

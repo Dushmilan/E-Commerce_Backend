@@ -7,6 +7,7 @@ const cors = require('cors');
 const userRoutes = require('./routes/userRoutes');
 const productRoutes = require('./routes/productRoutes');
 const authRoutes = require('./routes/authRoutes');
+const cartRoutes = require('./routes/cartRoutes');
 
 // ... other imports
 const connectDB = require('./config/db');
@@ -31,7 +32,8 @@ app.get('/health', (req, res) => {res.json({ health: 'Healthy', uptime: process.
 
 app.use('/api/users', userRoutes);
 app.use('/api/auth', authRoutes);
-app.use('/products', productRoutes);
+app.use('/api/products', productRoutes);
+app.use('/api/cart', cartRoutes);
 
 
 module.exports = app;
