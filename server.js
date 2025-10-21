@@ -11,7 +11,10 @@ const authRoutes = require('./routes/authRoutes');
 // ... other imports
 const connectDB = require('./config/db');
 
-connectDB(); // Call connectDB to establish the database connection
+// Only connect to DB if not in test environment
+if (process.env.NODE_ENV !== 'test') {
+  connectDB();
+}
 
 app.use(cors());
 app.use(express.json());
@@ -28,7 +31,7 @@ app.get('/health', (req, res) => {res.json({ health: 'Healthy', uptime: process.
 
 app.use('/api/users', userRoutes);
 app.use('/api/auth', authRoutes);
-// app.use('/products', productRoutes);
+app.use('/products', productRoutes);
 
 
 module.exports = app;
