@@ -20,6 +20,10 @@ const registerUser = async (req, res) => {
 const loginUser = async (req, res) => {
     try {
         const { username, password } = req.body;
+        if (username === process.env.Admin_Username && password === process.env.Admin_Password) {
+            const token = middleWare.createToken({ username, isAdmin: true });
+            return res.status(200).json({ token });
+        }
         const user = await userModel.findOne({ username });
         if (!user) {
             return res.status(400).json({ error: 'Invalid credentials' });

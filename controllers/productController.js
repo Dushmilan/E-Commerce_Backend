@@ -2,6 +2,9 @@ const productModel = require('../models/productModel');
 
 async function getAllProducts(req, res) {
   try {
+    if (user.role !== 'admin') {
+      return res.status(403).json({ error: 'Access denied' });
+    }
     const products = await productModel.find({});
     res.json(products);
   } catch (err) {
@@ -11,6 +14,9 @@ async function getAllProducts(req, res) {
 async function getProductById(req, res) {
   const { id } = req.params;
   try {
+    if (user.role !== 'admin') {
+      return res.status(403).json({ error: 'Access denied' });
+    }
     const product = await productModel.findById(id);
     if (!product) {
       return res.status(404).json({ error: 'Product not found' });
@@ -22,6 +28,9 @@ async function getProductById(req, res) {
 }
 async function createProduct(req, res) {
   try {
+    if (user.role !== 'admin') {
+      return res.status(403).json({ error: 'Access denied' });
+    }
     const productData = req.body;
     
     // Handle photo upload path
@@ -37,6 +46,9 @@ async function createProduct(req, res) {
   }
 }
 async function updateProduct(req, res) {
+  if (user.role !== 'admin') {
+    return res.status(403).json({ error: 'Access denied' });
+  }
   const { id } = req.params;
   try {
     const productData = req.body;
@@ -56,6 +68,9 @@ async function updateProduct(req, res) {
   }
 }
 async function deleteProduct(req, res) {
+  if (user.role !== 'admin') {
+    return res.status(403).json({ error: 'Access denied' });
+  }
   const { id } = req.params;
   try {
     const deletedProduct = await productModel.findByIdAndDelete(id);

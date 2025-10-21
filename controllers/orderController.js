@@ -39,6 +39,9 @@ exports.getOrderById = async (req, res) => {
 // Get all orders
 exports.getAllOrders = async (req, res) => {
   try {
+    if (!req.user.isAdmin) {
+      return res.status(403).json({ message: 'Access denied' });
+    }
     const orders = await orderModel.find();
     res.status(200).json(orders);
   } catch (error) {
