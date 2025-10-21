@@ -13,4 +13,9 @@ const authenticateToken = (req, res, next) => {
     );
 };
 
-module.exports = { authenticateToken };
+const createToken = (user) => {
+    return JWT.sign(user, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '1h' });
+};
+
+
+module.exports = { authenticateToken, createToken };
