@@ -7,16 +7,18 @@ const cors = require('cors');
 const userRoutes = require('./routes/userRoutes');
 const productRoutes = require('./routes/productRoutes');
 
+// ... other imports
+const connectDB = require('./config/db');
+
+connectDB(); // Call connectDB to establish the database connection
+
 app.use(cors());
 app.use(express.json());
 
 const port = process.env.port || 3000;
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
-}
-
-);
-
+});
 // Define your routes here
 app.get('/', (req, res) => {res.send('Welcome to the E-Commerce Backend!');});
 app.get('/status', (req, res) => {res.json({ status: 'OK', timestamp: new Date() });});
